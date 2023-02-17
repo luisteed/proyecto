@@ -1,0 +1,2772 @@
+$(document).ready(function(){
+	
+  //FUNCIONES CART
+	$("#AddItem").click(function(){
+      var proitem = $("#txtidpro").val();
+      var procant = $("#txtcantidad").val();
+      var proprec = $("#txtprepro").val();
+      var proses = $("#txtses").val();
+      var message= "";
+      $("#message-cart").html("Procesando...")
+      $.post("proc_addcart.php",{proitem: proitem, proprec: proprec, procant: procant, proses: proses},function(data){
+           
+                   
+                     $("#message-cart").html("").show();
+                     $("#message-cart").html(data);
+                     $("#message-cart").fadeOut(5000,function(){
+                     $(this).html("");
+                     $(this).fadeIn(3000);
+                      });
+                     
+                     window.location.href="shop-cart.php";
+                     
+                  
+         
+        });
+
+      //Realizo Peticion Asincrona
+    
+	});
+  $("#list-prods").on("click",".addprocart",function(eventadd){
+      eventadd.preventDefault();
+      var proitem = $(this).attr("data-add-id");
+      var procant = "1";
+      var proprec = $(this).attr("data-add-pre");
+      
+      var message= "";
+      $("#AddCartModal").modal('show');
+      $("#AddCartModal #message-cart").html("Procesando...")
+      $.post("proc_quickaddcart.php",{proitem: proitem, proprec: proprec, procant: procant},function(data){
+           
+                   
+                     $("#AddCartModal #message-cart").html("").show();
+                     $("#AddCartModal #message-cart").html(data);
+                     $("#AddCartModal #message-cart").fadeOut(5000,function(){
+                     $(this).html("");
+                     $(this).fadeIn(3000);
+                      });
+                     
+                     window.location.href="shop-cart.php";
+                     
+                  
+         
+        });
+
+      //Realizo Peticion Asincrona
+    
+  });
+
+  $("#dropdownicocart").on("click",".del_item_cart",function(evenetdelitcar){
+    evenetdelitcar.preventDefault();
+    var iditemdel = $(".del_item_cart").attr("data-item-id");
+    var iditemses = $(".del_item_cart").attr("data-item-ses");
+    var pgcart = $("#cartbag").attr("data-page-active");
+    var message ="";   
+
+       $.post("proc_delitemcart.php",{iditemdel: iditemdel},function(data){
+           
+                     
+                     message ="<div class='lds-ellipsis'><span></span><span></span><span></span></div>";
+                     $("#temp-details-cart").html("");
+                     $("#temp-details-cart").html(message);
+                     $("#dropdownicocart").html("");
+                     $("#dropdownicocart").html(data);
+
+                     $.post("refresh-cartbag.php",function(bagrefresh){
+           
+                            
+                         
+                         $("#cartbag").html("");
+                         $("#cartbag").html(bagrefresh);            
+          
+          
+         
+                    });
+
+                     if(pgcart=="shop-cart.php"){
+
+                       $.post("refresh-detailcart.php",function(datailrefresh){
+             
+                              
+                           message ="<tr><td colspan='6' style='padding:20px 20px;'><div class='lds-ellipsis'><span></span><span></span><span></span></div></td></tr>";
+                           $("#temp-details-cart").html("");
+                           $("#temp-details-cart").html(message);
+                           $("#temp-details-cart").html("");
+                           $("#temp-details-cart").html(datailrefresh);            
+            
+            
+           
+                      });
+                      $.post("refresh-totalscart.php",function(totalsrefresh){
+             
+                              
+                           message ="<div class='lds-ellipsis'><span></span><span></span><span></span></div>";
+                           $("#cart-totals").html("");
+                           $("#cart-totals").html(message);
+                           $("#cart-totals").html("");
+                           $("#cart-totals").html(totalsrefresh);            
+            
+            
+           
+                      });
+
+
+
+
+                    }           
+          
+          
+         
+        });
+
+    
+
+  });
+
+  $("#temp-details-cart").on("click",".remove-itemcart",function(evenetdelprocar){
+    evenetdelprocar.preventDefault();
+
+    var idiprodel = $(".remove-itemcart").attr("data-item-remove");
+
+    message ="<tr><td colspan='6' style='padding:20px 20px;'><div class='lds-ellipsis'><span></span><span></span><span></span></div></td></tr>";
+     $("#temp-details-cart").html("");
+     $("#temp-details-cart").html(message);
+    
+    $.post("proc_delitemdetcart.php",{idiprodel: idiprodel},function(data){
+           
+                   
+                     $("#temp-details-cart").empty();
+                     $("#temp-details-cart").html(data);
+
+
+                     $.post("refresh-cartbag.php",function(bagrefresh){
+           
+                            
+                         
+                         $("#cartbag").html("");
+                         $("#cartbag").html(bagrefresh);            
+          
+          
+         
+                    });
+                     $.post("refresh-icocart.php",function(datarefresh){
+           
+                   
+                         $("#dropdownicocart").html("");
+                         $("#dropdownicocart").html(datarefresh);            
+          
+          
+         
+                    });
+                    $.post("refresh-totalscart.php",function(totalsrefresh){
+             
+                              
+                           message ="<div class='lds-ellipsis'><span></span><span></span><span></span></div>";
+                           $("#cart-totals").html("");
+                           $("#cart-totals").html(message);
+                           $("#cart-totals").html("");
+                           $("#cart-totals").html(totalsrefresh);            
+            
+            
+           
+                      });                                
+          
+          
+         
+        });
+
+  });
+  $("#ContinueShop").click(function(eventCS){
+    eventCS.preventDefault();
+    window.location.href="./";
+  });
+  
+  $("#UpdateitemsCart").click(function(evenetuptcar){
+   evenetuptcar.preventDefault();
+     var formData = new FormData($("#details-cart")[0]);
+     var message = "";
+     
+     message ="<tr><td colspan='6' style='padding:20px 20px;'><div class='lds-ellipsis'><span></span><span></span><span></span></div></td></tr>";
+     $("#temp-details-cart").html("");
+     $("#temp-details-cart").html(message);
+    $.ajax({
+         url: 'proc_upitemcart.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false  
+        
+           
+          })         
+         .done(function(data){  
+   
+           
+                   
+            $("#temp-details-cart").html("");
+            $("#temp-details-cart").html(data);
+
+            $.post("refresh-cartbag.php",function(databag){
+           
+                   
+                         
+
+                         $("#cartbag").html("");
+                         $("#cartbag").html(databag);            
+          
+          
+         
+            });
+            $.post("refresh-icocart.php",function(datarefresh){
+           
+                   
+                         $("#dropdownicocart").html("");
+                         $("#dropdownicocart").html(datarefresh);            
+          
+          
+         
+            });
+            $.post("refresh-totalscart.php",function(totalsrefresh){
+             
+                              
+                           message ="<div class='lds-ellipsis'><span></span><span></span><span></span></div>";
+                           $("#cart-totals").html("");
+                           $("#cart-totals").html(message);
+                           $("#cart-totals").html("");
+                           $("#cart-totals").html(totalsrefresh);            
+            
+            
+           
+           });            
+          
+          
+         
+         }).fail(function(){
+            message = "<tr><td class='text-center' colspan='6' style='padding:20px 20px;'>Ha ocurrido un error.</td></tr>";
+            $("#temp-details-cart").append(message);
+          
+         });
+
+  });
+
+
+    $(".tab_slider .tab-pane .product_slider").on("click",".fav-item",function(eventwish){
+     eventwish.preventDefault();
+     var estlink = $(this).attr("data-client-act");
+     var itemark = $(this).attr("data-wish-list");
+     var keycus = $(this).attr("data-key-customer");
+     var keyprod = $(this).attr("data-key-product");
+     
+     if(estlink=="n-activo"){
+       window.location.href="login.php";
+     }else{
+        
+        
+        if(itemark=="n-marcado"){
+
+           $(this).addClass("wishmark");
+           $(this).attr("data-wish-list","marcado");
+
+          $.post("proc_adwishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+              
+              $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+           
+
+          });
+
+        }else{
+
+           $(this).removeClass("wishmark");
+           $(this).attr("data-wish-list","n-marcado");
+
+          $.post("proc_rewishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+           
+             $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+
+
+
+          });
+
+        }
+     }
+  });
+
+   $(".product_slider").on("click",".fav-item",function(eventwish){
+     eventwish.preventDefault();
+     var estlink = $(this).attr("data-client-act");
+     var itemark = $(this).attr("data-wish-list");
+     var keycus = $(this).attr("data-key-customer");
+     var keyprod = $(this).attr("data-key-product");
+     
+     if(estlink=="n-activo"){
+       window.location.href="login.php";
+     }else{
+        
+        
+        if(itemark=="n-marcado"){
+
+           $(this).css({ "background-color": "#ff9100", "color": "#fff", "box-shadow": "0 0 5px rgba(0,0,0,0.2)",
+"border-radius": "100%", "width": "35px", "height": "35px", "line-height": "35px" });
+           $(this).attr("data-wish-list","marcado");
+
+          $.post("proc_adwishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+              
+              $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+           
+
+          });
+
+        }else{
+
+           $(this).css({ "background-color": "#ffffff", "color": "#292b2c", "box-shadow": "0 0 5px rgba(0,0,0,0.2)",
+"border-radius": "100%", "width": "35px", "height": "35px", "line-height": "35px" });
+           $(this).attr("data-wish-list","n-marcado");
+
+          $.post("proc_rewishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+           
+             $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+
+
+
+          });
+
+        }
+     }
+  });
+
+    $("#list-prods .product .product_action_box").on("click",".fav-item",function(eventwish){
+     eventwish.preventDefault();
+     var estlink = $(this).attr("data-client-act");
+     var itemark = $(this).attr("data-wish-list");
+     var keycus = $(this).attr("data-key-customer");
+     var keyprod = $(this).attr("data-key-product");
+     
+     if(estlink=="n-activo"){
+       window.location.href="login.php";
+     }else{
+        
+        
+        if(itemark=="n-marcado"){
+
+           $(this).css({ "background-color": "rgb(255, 145, 0)", "color": "rgb(41, 43, 44)" });
+           $(this).attr("data-wish-list","marcado");
+
+          $.post("proc_adwishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+              
+              $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+           
+
+          });
+
+        }else{
+
+           $(this).css({ "background-color": "#ffffff", "color": "#292b2c" });
+           $(this).attr("data-wish-list","n-marcado");
+
+          $.post("proc_rewishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+           
+             $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+
+
+
+          });
+
+        }
+     }
+  });
+  $("#list-prods .product .product_info").on("click",".fav-item",function(eventwish){
+     eventwish.preventDefault();
+     var estlink = $(this).attr("data-client-act");
+     var itemark = $(this).attr("data-wish-list");
+     var keycus = $(this).attr("data-key-customer");
+     var keyprod = $(this).attr("data-key-product");
+     
+     if(estlink=="n-activo"){
+       window.location.href="login.php";
+     }else{
+        
+        
+        if(itemark=="n-marcado"){
+
+           
+           $(this).css("color","#ff9100");
+           $(this).attr("data-wish-list","marcado");
+
+          $.post("proc_adwishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+              
+              $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+           
+
+          });
+
+        }else{
+
+           $(this).css("color","#292b2c");
+           $(this).attr("data-wish-list","n-marcado");
+
+          $.post("proc_rewishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+           
+             $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+
+
+
+          });
+
+        }
+     }
+  });
+
+  //MARCAR FAVORITOS LISTA INDEX
+  $("#listProducts").on("click",".products_listview .product_wrap .product_action_box .list_none .fav-item",function(eventwish){
+     eventwish.preventDefault();
+     var estlink = $(this).attr("data-client-act");
+     var itemark = $(this).attr("data-wish-list");
+     var keycus = $(this).attr("data-key-customer");
+     var keyprod = $(this).attr("data-key-product");
+     
+     if(estlink=="n-activo"){
+       window.location.href="login.php";
+     }else{
+        
+        
+        if(itemark=="n-marcado"){
+
+           $(this).css({ "background-color": "#ff9100", "color": "#fff", "box-shadow": "0 0 5px rgba(0,0,0,0.2)",
+"border-radius": "100%", "width": "35px", "height": "35px", "line-height": "35px" });
+           $(this).attr("data-wish-list","marcado");
+
+          $.post("proc_adwishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+              
+              $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+           
+
+          });
+
+        }else{
+
+           $(this).css({ "background-color": "#ffffff", "color": "#292b2c", "box-shadow": "0 0 5px rgba(0,0,0,0.2)",
+"border-radius": "100%", "width": "35px", "height": "35px", "line-height": "35px" });
+           $(this).attr("data-wish-list","n-marcado");
+
+          $.post("proc_rewishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+           
+             $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+
+
+
+          });
+
+        }
+     }
+  });
+  //MARCAR FAVORITOS LISTA INDEX
+
+  $("#dropdownicowish").on("click",".unmark_item",function(){
+       var keycus = $(this).attr("data-item-idwcus");
+       var keyprod = $(this).attr("data-item-idwpro");
+
+       $.post("proc_rewishlist.php",{keycus: keycus, keyprod: keyprod})
+       .done(function(datawreinfo){
+
+              $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+
+              $(".product_slider .fav-item").each(function(){
+                if($(this).attr("data-key-product")==keyprod){
+                  $(this).removeClass("wishmark");
+                  
+                }
+                
+              });
+
+       });
+  });
+
+  $(".add_wishlist").click(function(eventwishsho){
+     eventwishsho.preventDefault();
+     
+     var estlink = $(this).attr("data-client-act");
+     var itemark = $(this).attr("data-wish-list");
+     var keycus = $(this).attr("data-key-customer");
+     var keyprod = $(this).attr("data-key-product");
+     
+     if(estlink=="n-activo"){
+       window.location.href="login.php";
+     }else{
+        
+        
+        if(itemark=="n-marcado"){
+
+           $(".add_wishlist i").addClass("wishmark-shop");
+           $(this).attr("data-wish-list","marcado");
+
+          $.post("proc_adwishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+              
+              $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+           
+
+          });
+
+        }else{
+
+           $(".add_wishlist i").removeClass("wishmark-shop");
+           $(this).attr("data-wish-list","n-marcado");
+
+          $.post("proc_rewishlist.php",{keycus: keycus , keyprod: keyprod})
+
+          .done(function(datawish){
+           
+             $.post("refresh_numwish.php",{keycus: keycus},function(datawcount){
+
+                $(".wishlist_count").html("");
+                $(".wishlist_count").html(datawcount);
+
+              });
+
+              $.post("refresh_infowish.php",{keycus: keycus},function(datawinfo){
+                
+                $("#dropdownicowish").html("");
+                $("#dropdownicowish").html(datawinfo);
+
+              });
+
+
+
+          });
+
+        }
+     }
+  });
+
+  $("#sorting").change(function(){
+    var optsort= $("#sorting option:selected").index();
+    var optshow= $("#showing option:selected").index();
+    var katego= $("#sorting").attr("data-category-prod");
+    var wishli= $("#sorting").attr("data-wish-prod");
+    var opcionsort,opcionshow="";
+
+    switch (optsort){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (optshow){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_sorting.php",{sort: opcionsort, katego: katego, showp: opcionshow, wishli: wishli})
+    
+    .done(function(datasoting){
+         
+         $("#list-prods").html("");
+         $("#list-prods").html(datasoting);
+    });
+
+
+  });
+
+  $("#showing").change(function(){
+    var optsort= $("#sorting option:selected").index();
+    var optshow= $("#showing option:selected").index();
+    var katego= $("#showing").attr("data-category-prod");
+    var wishli= $("#showing").attr("data-wish-prod");
+    var opcionsort,opcionshow="";
+
+    switch (optsort){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (optshow){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_sorting.php",{sort: opcionsort, katego: katego, showp: opcionshow, wishli: wishli})
+    
+    .done(function(datasoting){
+         
+         $("#list-prods").html("");
+         $("#list-prods").html(datasoting);
+    });
+
+
+  });
+  $("#sortingsearch").change(function(){
+    var optsort= $("#sortingsearch option:selected").index();
+    var optshow= $("#showingsearch option:selected").index();
+    var katego= $("#sortingsearch").attr("data-category-prod");
+    var wishli= $("#sortingsearch").attr("data-wish-prod");
+    var despro= $("#sortingsearch").attr("data-desc-prod");
+    var opcionsort,opcionshow="";
+
+    switch (optsort){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (optshow){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_sortingsearch.php",{sort: opcionsort, katego: katego, showp: opcionshow, wishli: wishli, despro: despro})
+    
+    .done(function(datasoting){
+         
+         $("#list-prods").html("");
+         $("#list-prods").html(datasoting);
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+    });
+
+
+  });
+
+  $("#showingsearch").change(function(){
+    var optsort= $("#sortingsearch option:selected").index();
+    var optshow= $("#showingsearch option:selected").index();
+    var katego= $("#showingsearch").attr("data-category-prod");
+    var wishli= $("#showingsearch").attr("data-wish-prod");
+    var despro= $("#showingsearch").attr("data-desc-prod");
+    var pagclic = $("#selpagintation").val();
+    var opcionsort,opcionshow="";
+
+    switch (optsort){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (optshow){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_sortingsearch.php",{sort: opcionsort, katego: katego, showp: opcionshow, wishli: wishli, despro: despro})
+    
+    .done(function(datasoting){
+         
+         $("#list-prods").html("");
+         $("#list-prods").html(datasoting);
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+    });
+
+    $.post("proc_respagination.php",{katepa: katego,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic,despro: despro})
+      .done(function(datarespagination){
+
+         $("#list-prods").html("");
+         $("#list-prods").html(datarespagination);
+
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+         $.post("proc_navselpagination.php",{katepa: katego,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic,despro: despro},function(datanavpag){
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html(datanavpag);
+
+         });
+         
+    });
+
+
+  });
+  $("#header-search").keyup(function(){
+     var ksearch = $(this).val();
+     //var position = $(this).position();
+     //var positionTop = position.top + 100;
+     //var positionLeft = position.left + 421;
+     var datasear = ksearch;
+     if(datasear!="" && datasear.length > 3){
+          $.post("proc_autoserach.php",{kcomsear: datasear})
+          .done(function(datacomplete){
+            //$("#acomplete-box").css("top",""+parseInt(positionTop)+"");
+            //$("#acomplete-box").css("left",""+parseInt(positionLeft)+"");
+            $("#acomplete-box").fadeIn(1000).html(datacomplete);
+
+            $(".results").on("click",function(){
+              var kpro= $(this).attr("data-prod-k");
+              $('#acomplete-box').fadeOut(1000);
+               window.location.href="shop-product-detail.php?kitem="+kpro;
+            });
+          });
+      }else if(datasear.length == 0){
+          $("#header-search").val("");
+          $('#acomplete-box').fadeOut(1000);
+
+      }
+     
+  });
+  $("#heasearch").click(function(eventhsearch){
+     eventhsearch.preventDefault();
+     var dcat = $("#cate_hsearch").val();
+     var dsearch = $("#header-search").val();
+     var urlsear = "cpr="+dcat+"&dpr="+dsearch;
+     if(dsearch!=""){
+       window.location.href="shop-product-search.php?"+urlsear;
+     }
+  });
+
+  $("#editProfilecus").click(function(editprofile){
+     editprofile.preventDefault();
+     var formData = new FormData($("#formEdProfile")[0]);
+     var message="";
+     var archi = $("#pic_profilef").val();
+     var exten = archi.split(".");
+    
+    if(ValFormEditProfile()){
+
+      message = "<span class='alert alert-danger' rol='alert'>Alguno de los campos del Formulario contiene errores...</span>";
+                 showMessage(message);
+
+    }else{
+
+
+     if(archi!="" && !isImage(exten[1])){
+
+                  message ="<span class='alert alert-warning' rol='alert'>Solo se pueden guardar archivos con extenci&oacute;n jpg, gif &oacute; png...</span>";
+                 showMessage(message);
+
+     }else{
+        message = "<span class='alert alert-info' rol='alert'>Guardando Datos, por favor espere...</span>";
+        showMessage(message);
+       //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_editprofile.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+       })
+         .done(function(data){
+          
+        
+           
+                    var dataprof = JSON.parse(data);
+         
+           
+                   
+                     $(".messages").html("").show();
+                     $(".messages").html("<span class='alert alert-success' rol='alert'>Datos Modificados.</span>");
+                     $(".messages").fadeOut(5000,function(){
+                     $(this).html("");
+                     $(this).fadeIn(3000);
+                      });
+                     $(".profile-card__avatar img").attr("src"," ");
+                     $("#pic_profilef").val("");
+                     $("#tbk").val("");
+                     $("#hpicli").val("");
+                     $("#name_prof").val("");
+                     $("#lname_prof").val("");
+                     $("#email_prof").val("");
+
+                     
+                     $("#tbk").val(dataprof.data[0].id_cli);
+                     $("#hpicli").val(dataprof.data[0].pic_cli);
+                     $("#name_prof").val(dataprof.data[0].nom_cli);
+                     $("#lname_prof").val(dataprof.data[0].ape_cli);
+                     $("#email_prof").val(dataprof.data[0].ema_cli);
+                     
+                     $(".profile-card__avatar img").attr("src","assets/images/avatar/"+dataprof.data[0].pic_cli+"");
+                     //$(".profile-card__avatar").html(dataprof.data[0].imgshow);
+                     
+                  
+         })
+         .fail(function(){
+           message = "<span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span>";
+                   showMessage(message);
+          
+         });
+
+      //Realizo Peticion Asincrona
+    }
+
+    }
+
+
+  });
+  $("#customer-addresses").on("click",".modaddss",function(evEditAdd){
+    evEditAdd.preventDefault();
+
+    var idadd = $(this).attr("data-keyaddss");
+    var vaurl = "kadds="+idadd;
+
+    window.location.href="edit-addresses.php?"+vaurl;
+  });
+
+
+  $("#editAddress").click(function(evBtnEdAdd){
+     evBtnEdAdd.preventDefault();
+
+     var formData = new FormData($("#formEdAddress")[0]);
+     var message="";    
+    
+    if(ValFormEditAddress()){
+
+      message = "<span class='alert alert-danger' rol='alert'>Alguno de los campos del Formulario contiene errores...</span>";
+                 showMessage(message);
+
+    }else{
+
+
+        message = "<span class='alert alert-info' rol='alert'>Guardando Datos, por favor espere...</span>";
+        showMessage(message);
+       //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_editaddress.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+       })
+         .done(function(data){
+                   
+                     $(".messages").html("").show();
+                     $(".messages").html("<span class='alert alert-success' rol='alert'>Datos Modificados.</span>");
+                     $(".messages").fadeOut(5000,function(){
+                     $(this).html("");
+                     $(this).fadeIn(3000);
+                      });
+                     
+                     setTimeout(function(){ window.location.href="account-addresses.php"; }, 4000);
+                     
+                  
+         })
+         .fail(function(){
+           message = "<span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span>";
+                   showMessage(message);
+          
+         });
+
+      //Realizo Peticion Asincrona
+    
+
+    }
+
+  });
+
+  $("#addnewaddress").click(function(evSaveadd){
+     evSaveadd.preventDefault();
+     window.location.href="save-addresses.php";
+  });
+  
+  $("#saveAddress").click(function(evBtnSavAdd){
+     evBtnSavAdd.preventDefault();
+
+     var formData = new FormData($("#formSavAddress")[0]);
+     var message="";    
+    
+    if(ValFormSavAddress()){
+
+      message = "<span class='alert alert-danger' rol='alert'>Alguno de los campos del Formulario contiene errores...</span>";
+                 showMessage(message);
+
+    }else{
+
+
+        message = "<span class='alert alert-info' rol='alert'>Guardando Datos, por favor espere...</span>";
+        showMessage(message);
+       //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_saveaddress.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+       })
+         .done(function(data){
+                   
+                      if(data=="verdadero"){
+                        $(".messages").html("").show();
+                        $(".messages").html("<span class='alert alert-success' rol='alert'>Datos Guardados.</span>");
+                        $(".messages").fadeOut(5000,function(){
+                         $(this).html("");
+                         $(this).fadeIn(3000);
+                        });
+                        setTimeout(function(){ window.location.href="account-addresses.php"; }, 4000);
+                      }else if(data=="falso"){
+                        $(".messages").html("").show();
+                        $(".messages").html("<span class='alert alert-danger' rol='alert'>El m&aacute;ximo de Direcciones permitidas es 2</span>");
+                        $(".messages").fadeOut(5000,function(){
+                         $(this).html("");
+                         $(this).fadeIn(3000);
+                        });
+
+                        setTimeout(function(){ window.location.href="account-addresses.php"; }, 4000);
+
+                      }
+                     
+                     
+                     
+                  
+         })
+         .fail(function(){
+           message = "<span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span>";
+                   showMessage(message);
+          
+         });
+
+      //Realizo Peticion Asincrona
+    
+
+    }
+
+  });
+  $("#changepassw").click(function(evBtnChangePass){
+      
+      evBtnChangePass.preventDefault();
+
+      var formData = new FormData($("#formChangePassw")[0]);
+     var message="";    
+    
+    if(ValFormChangePassw()){
+
+      message = "<span class='alert alert-danger' rol='alert'>Alguno de los campos del Formulario contiene errores...</span>";
+                 showMessage(message);
+
+    }else{
+
+
+        message = "<span class='alert alert-info' rol='alert'>Guardando Datos, por favor espere mientras se procesan los datos...</span>";
+        showMessage(message);
+       //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_changepassword.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+       })
+         .done(function(data){
+                   
+                      if(data=="verdadero"){
+                        $(".messages").html("").show();
+                        $(".messages").html("<span class='alert alert-success' rol='alert'>Su Clave de Usuario ha sido Cambiada exitosamente.</span>");
+                        $(".messages").fadeOut(5000,function(){
+                         $(this).html("");
+                         $(this).fadeIn(3000);
+                        });
+                        setTimeout(function(){ window.location.href="account-dashboard.php"; }, 4000);
+                      }else if(data=="falso"){
+                        $(".messages").html("").show();
+                        $(".messages").html("<span class='alert alert-danger' rol='alert'>La clave actual no corresponde a la almacenada.</span>");
+                        $(".messages").fadeOut(5000,function(){
+                         $(this).html("");
+                         $(this).fadeIn(3000);
+                        });
+
+                        setTimeout(function(){ window.location.href="account-dashboard.php"; }, 4000);
+
+                      }
+                     
+                     
+                     
+                  
+         })
+         .fail(function(){
+           message = "<span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span>";
+                   showMessage(message);
+          
+         });
+
+      //Realizo Peticion Asincrona
+    
+
+    }
+  });
+  //FUNCIONES CART
+  //LOGIN CHECKOUT
+  $("#logincheckout").click(function(){
+
+    var formData = new FormData($("#form-login")[0]);
+     var message="";
+    
+    if(ValFormLoginCheckout()){
+
+      message = "<br><span class='alert alert-danger' rol='alert' style='font-size:15px !important;'>Alguno de los campos del Formulario contiene errores...</span><br>";
+                 $("#messaje-login").html(message);
+
+    }else{
+   
+      message = "<br><span class='alert alert-info' rol='alert'>Verificando Datos, por favor espere...</span><br>";
+      $("#messaje-login").html(message);
+
+     //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_logincheckout.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+         
+          
+        
+           
+          })         
+         .done(function(data){
+           
+           if(data=="<span class='alert alert-danger' rol='alert'>El Usuario o la Clave que ingreso contiene errores.</span>"){
+                   
+                     $("#messaje-login").html("").show();
+                     $("#messaje-login").html(data);
+                     $("#messaje-login").fadeOut(5000,function(){
+                     $(this).html("");
+                     $(this).fadeIn(3000);
+                      });
+                     
+          }else{
+
+            var login = JSON.parse(data);
+
+            $("#messaje-login").html("").show();
+            $("#messaje-login").html("<span class='alert alert-success' rol='alert'>Datos verificados correctamente.</span>");
+            $("#messaje-login").fadeOut(5000,function(){
+               $(this).html("");
+               $(this).fadeIn(3000);
+             });
+
+            $("#txtnomremi").val(login[0].nom_cli);
+            $("#txtaperemi").val(login[0].ape_cli);
+            $("#txtemaremi").val(login[0].ema_cli);
+
+            $("#user-access").html("");
+            var useractive = "<i class='fas fa-user'></i>Bienvenido "+login[0].nom_cli+" "+login[0].ape_cli+" ";
+            $("#user-access").html("");
+            $("#user-access").html(useractive);
+            $("#loginform").collapse('hide');
+            $("#nwaccountchk").addClass("d-none");
+            $("#nwaccounttxt").addClass("d-none");
+          }
+                     
+                  
+         })
+         .fail(function(){
+           message = "<br><span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span><br>";
+                   $("#messaje-login").html(message);
+          
+         });
+        
+      //Realizo Peticion Asincrona
+    }
+
+  });
+  //LOGIN CHECKOUT
+
+  //LOGIN GENERAL
+   $("#LogUser").click(function(eventlog){
+     eventlog.preventDefault();
+     var formData = new FormData($("#form-loginuser")[0]);
+     var message = "";
+     
+     if(ValFormLoginGral()){
+       message="<span class='alert alert-danger' rol='alert'>Alguno de los campos contiene errores...</span>";
+       $("#message-login").html("");
+       $("#message-login").html(message);
+       
+     }else{
+
+       message = "<br><span class='alert alert-info' rol='alert'>Verificando Datos, por favor espere...</span><br>";
+      $("#message-login").html(message);
+
+     //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_login.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+         
+          
+        
+           
+          })         
+         .done(function(data){
+
+           if(data=="<span class='alert alert-danger' rol='alert'>El Usuario o la Clave que ingreso contiene errores.</span>"){
+
+            $("#message-login").html("").show();
+            $("#message-login").html("<span class='alert alert-danger' rol='alert'>El Usuario o la Clave que ingreso contiene errores.</span>");
+            $("#message-login").fadeOut(5000,function(){
+               $(this).html("");
+               $(this).fadeIn(3000);
+             });
+
+           }else{
+           
+            $("#message-login").html("").show();
+            $("#message-login").html("<span class='alert alert-success' rol='alert'>Datos verificados correctamente.</span>");
+            $("#message-login").fadeOut(5000,function(){
+               $(this).html("");
+               $(this).fadeIn(3000);
+             });      
+
+             window.location.href="index.php";  
+           }          
+                  
+         })
+         .fail(function(){
+           message = "<br><span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span><br>";
+                   $("#message-login").html(message);
+          
+         });
+        
+      //Realizo Peticion Asincrona
+
+     }
+
+
+   });
+
+  //LOGIN GENERAL
+
+  //SIGNUP USUARIO
+  $("#SignupUser").click(function(eventsigup){
+    eventsigup.preventDefault();
+    
+    var formData = new FormData($("#form-signup-user")[0]);
+    var message = "";
+
+    if(ValSignUp()){
+      
+      message="<span class='alert alert-danger' rol='alert'>Alguno de los campos contiene errores...</span>";
+      $("#message-signup").html("");
+      $("#message-signup").html(message);
+
+    }else{
+
+       message = "<br><span class='alert alert-info' rol='alert'>Enviando Datos, por favor espere...</span><br>";
+      $("#message-signup").html(message);
+
+     //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_signup.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+         
+          
+        
+           
+          })         
+         .done(function(data){
+           
+           if(data=="<span class='alert alert-danger' rol='alert'>Usted ya esta registrado.</span>"){
+             $("#message-signup").html("").show();
+             $("#message-signup").html("<span class='alert alert-danger' rol='alert'>Usted ya esta registrado.</span>");
+             $("#message-signup").fadeOut(5000,function(){
+               $(this).html("");
+               $(this).fadeIn(3000);
+             });
+           }else{
+             $("#message-signup").html("").show();
+             $("#message-signup").html("<span class='alert alert-success' rol='alert'>Datos procesados correctamente.</span>");
+             $("#message-signup").fadeOut(5000,function(){
+               $(this).html("");
+               $(this).fadeIn(3000);
+             });
+
+             window.location.href="index.php";        
+           }          
+                  
+         })
+         .fail(function(){
+           message = "<br><span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span><br>";
+                   $("#message-signup").html(message);
+          
+         });
+        
+      //Realizo Peticion Asincrona
+
+    }
+
+  });
+  //SIGNUP USUARIO
+
+    //TIPO DE PAGO
+  $("#txttipopago").change(function(){
+     var tipopago = parseInt($(this).val());
+
+     switch (tipopago){
+      case 0:
+       $(".payment_method input[name='txtformapago']:radio").attr("checked",false);
+       $(".payment_method input[type='checkbox']").each(function(){
+          $(this).attr("checked",false);
+        });
+       $(".paytypea").hide();
+       $(".paytypeb").hide();
+       $(".payment_option .paymethoda").hide();
+       $(".payment_option .paymethodb").hide();
+       $("#txtrefpag").val("");
+       $("#imgcompag").val("");
+       $("#txtrefpagb").val("");
+       $("#imgcompagb").val("");
+       $(".img-remove").parent(".img-container").remove(); 
+       break;
+      case 1:
+       $(".payment_method input[name='txtformapago']:radio").attr("checked",false);
+       $(".payment_method input[type='checkbox']").each(function(){
+          $(this).attr("checked",false);
+        });
+       $(".paytypea").show();
+       $(".paytypeb").hide(); 
+       $(".payment_option .paymethoda").show();
+       $(".payment_option .paymethodb").hide();
+       $("#txtrefpag").val("");
+       $("#imgcompag").val("");
+       $("#txtrefpagb").val("");
+       $("#imgcompagb").val(""); 
+       $(".img-remove").parent(".img-container").remove();     
+       break;
+      case 2:
+       $(".payment_method input[name='txtformapago']:radio").attr("checked",false);
+       $(".payment_method input[type='checkbox']").each(function(){
+          $(this).attr("checked",false);
+        });
+       $(".paytypea").show();
+       $(".paytypeb").show();
+       $(".payment_option .paymethoda").hide();       
+       $(".payment_option .paymethodb").show();
+       $("#txtrefpag").val("");
+       $("#imgcompag").val("");
+       $("#txtrefpagb").val("");
+       $("#imgcompagb").val("");
+       $(".img-remove").parent(".img-container").remove();      
+                    
+    }
+
+  });
+  //TIPO DE PAGO
+
+  //OBTENER LA OPCION DE PAGO
+
+  $("#directbankt").click(function(){
+      $("#txtoptpay").val($("#directbankt").val());
+  });
+
+  $("#checkpayment").click(function(){
+      $("#txtoptpay").val($("#checkpayment").val());
+  });
+
+  $("#paypalpay").click(function(){
+      $("#txtoptpay").val($("#paypalpay").val());
+  });
+
+  //OBTENER LA OPCION DE PAGO
+
+  //ENVIAR DATOS DEL CHECKOUT
+  $("#PlaceOrder").click(function(event){
+    event.preventDefault();
+
+     var formData = new FormData($("#form-checkout")[0]);
+     var nwmessage="";
+    
+    if(ValDataCheckOut()){
+        nwmessage="<span class='alert alert-danger' rol='alert'>Alguno de los campos contiene errores...</span>";
+      $("#message-checkout").html("");
+      $("#message-checkout").html(nwmessage);
+    }else{
+      nwmessage = "<br><span class='alert alert-info' rol='alert'>Verificando Datos, por favor espere...</span><br>";
+      $("#message-checkout").html(nwmessage);
+
+     //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_checkout.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+         
+          
+        
+           
+          })         
+         .done(function(data){
+            
+            if(data=="nosession"){
+                $("#message-checkout").html("").show();
+                $("#message-checkout").html("<span class='alert alert-danger' rol='alert'>Su sesi&oacute;n de usuario ha caducado.</span>");
+                $("#message-checkout").fadeOut(5000,function(){
+                   $(this).html("");
+                   $(this).fadeIn(3000);
+                 });
+                $("#cartbag").html("");
+                  //window.location.href="login-refresh.php";
+            }else{
+                $("#message-checkout").html("").show();
+                $("#message-checkout").html("<span class='alert alert-success' rol='alert'>Datos procesados correctamente.</span>");
+                $("#message-checkout").fadeOut(5000,function(){
+                   $(this).html("");
+                   $(this).fadeIn(3000);
+                 });
+                $("#cartbag").html("");
+                //window.location.href="order-completed.php"; 
+            }  
+                  
+         })
+         .fail(function(){
+           nwmessage = "<br><span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span><br>";
+                   $("#message-checkout").html(nwmessage);
+          
+         });
+        
+      //Realizo Peticion Asincrona
+    }
+  });
+
+  $("#imgcompag").change(function(){
+         
+
+         var imgs = $("#imgcompag")[0].files;
+         var naveg = window.URL || window.webkitURL;
+
+         //for(x=0; x < imgs.length; x++){
+
+           if(imgs[0].size > 5120000){
+            $("#img-soppag").append("<span class='alert alert-danger' rol='alert'>El archivo "+imgs[0].name+" supera el m&aacute;ximo permitido 5MB.</span>");
+           }
+
+           else if(imgs[0].type != "image/jpeg" && imgs[0].type != "image/jpg" && imgs[0].type != "image/png" && imgs[0].type !="application/pdf"){
+            $("#img-soppag").append("<span class='alert alert-danger' rol='alert'>El archivo "+imgs[0].name+" no es el tipo de imagen permitido.</span>");
+           
+           }else{
+
+            if(imgs[0].type=="application/pdf"){
+            $("#img-soppag").html("");
+            $("#img-soppag").append("<div class='img-container'><p>"+imgs[0].name+"</p><a href='#' class='img-remove'><i class='fas fa-dumpster'></i></a></div>");
+
+            }else{
+            var img_url = naveg.createObjectURL(imgs[0]);
+            $("#img-soppag").html("");
+            $("#img-soppag").append("<div class='img-container'><img class='img-product' src='"+img_url+"' width='200px' height='150px'><a href='#' class='img-remove'><i class='fas fa-dumpster'></i></a></div>");
+            }
+           }
+         //}
+         $(".img-remove").click(function(eimgrem){
+           eimgrem.preventDefault();
+           $(this).parent(".img-container").remove();
+           $("#imgcompag").val("");
+           
+         });
+         
+    });
+
+  $("#imgcompagb").change(function(){
+         
+
+         var imgs = $("#imgcompagb")[0].files;
+         var naveg = window.URL || window.webkitURL;
+
+         //for(x=0; x < imgs.length; x++){
+
+           if(imgs[0].size > 5120000){
+            $("#img-soppagb").append("<span class='alert alert-danger' rol='alert'>El archivo "+imgs[0].name+" supera el m&aacute;ximo permitido 5MB.</span>");
+           }
+
+           else if(imgs[0].type != "image/jpeg" && imgs[0].type != "image/jpg" && imgs[0].type != "image/png" && imgs[0].type !="application/pdf"){
+            $("#img-soppagb").append("<span class='alert alert-danger' rol='alert'>El archivo "+imgs[0].name+" no es el tipo de imagen permitido.</span>");
+           
+           }else{
+
+            if(imgs[0].type=="application/pdf"){
+            $("#img-soppagb").html("");
+            $("#img-soppagb").append("<div class='img-container'><p>"+imgs[0].name+"</p><a href='#' class='img-remove'><i class='fas fa-dumpster'></i></a></div>");
+
+            }else{
+            var img_url = naveg.createObjectURL(imgs[0]);
+            $("#img-soppagb").html("");
+            $("#img-soppagb").append("<div class='img-container'><img class='img-product' src='"+img_url+"' width='200px' height='150px'><a href='#' class='img-remove'><i class='fas fa-dumpster'></i></a></div>");
+            }
+           }
+         //}
+         $(".img-remove").click(function(eimgrem){
+           eimgrem.preventDefault();
+           $(this).parent(".img-container").remove();
+           $("#imgcompagb").val("");
+           
+         });
+         
+    });
+  
+
+  //ENVIAR DATOS DEL CHECKOUT
+ $("#back-orders").click(function(ebackorder){
+   ebackorder.preventDefault();
+
+   window.location.href="order-history.php";
+
+ });
+ //SHOP LIST PAG
+
+$(".pagination").on("click",".pagination-search",function(eventpag){
+     eventpag.preventDefault();
+     var pagclic = $(this).attr("data-pagination-number");
+     var katepa= $(this).attr("data-pagination-kat");
+     var sortpa= $("#sorting option:selected").index();
+     var showpa= $("#showing option:selected").index();
+     var opcionsort,opcionshow = "";
+    switch (sortpa){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (showpa){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_respagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic})
+      .done(function(datarespagination){
+
+         $("#list-prods").html("");
+         $("#list-prods").html(datarespagination);
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+
+          $(".pagination").html("");
+          $(".pagination").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+         $.post("proc_navpagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic},function(datanavpag){
+
+          $(".pagination").html("");
+          $(".pagination").html(datanavpag);
+
+         });
+         
+    });
+
+      
+});
+
+$(".paginationsel").on("click",".paginationsel-search",function(eventpag){
+     eventpag.preventDefault();
+     var pagclic = $(this).attr("data-pagination-search");
+     var katepa= $(this).attr("data-pagination-kat");
+     var sortpa= $("#sortingsearch option:selected").index();
+     var showpa= $("#showingsearch option:selected").index();
+     var despro= $(this).attr("data-desc-prod");
+     var opcionsort,opcionshow = "";
+    switch (sortpa){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (showpa){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+      $('html, body').animate({scrollTop: 0}, 200);
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+      
+    $.post("proc_respagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic,despro: despro})
+      .done(function(datarespagination){
+
+         $("#list-prods").html("");
+         $("#list-prods").html(datarespagination);
+
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+         $.post("proc_navselpagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic,despro: despro},function(datanavpag){
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html(datanavpag);
+
+         });
+         
+    });
+
+      
+});
+
+$(".paginationsel").on("change","#selpagintation",function(eventpag){
+     eventpag.preventDefault();
+     var pagclic = $("#selpagintation").val();
+     var katepa= $(this).attr("data-pagination-kat");
+     var sortpa= $("#sortingsearch option:selected").index();
+     var showpa= $("#showingsearch option:selected").index();
+     var despro= $(this).attr("data-desc-prod");
+     var opcionsort,opcionshow = "";
+    switch (sortpa){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (showpa){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+      $('html, body').animate({scrollTop: 0}, 200);
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_respagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic,despro: despro})
+      .done(function(datarespagination){
+
+         $("#list-prods").html("");
+         $("#list-prods").html(datarespagination);
+
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+         $.post("proc_navselpagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic,despro: despro},function(datanavpag){
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html(datanavpag);
+
+         });
+         
+    });
+
+      
+});
+
+$(".paginationsel").on("click",".paginationowlsel-search",function(eventpag){
+     eventpag.preventDefault();
+     var pagclic = $(this).attr("data-pagination-search");
+     var katepa= $(this).attr("data-pagination-clasi");
+     var sortpa= $("#sortingowl option:selected").index();
+     var showpa= $("#showingowl option:selected").index();
+     
+     var opcionsort,opcionshow = "";
+    switch (sortpa){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (showpa){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+      $('html, body').animate({scrollTop: 0}, 200);
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_resowlpagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic})
+      .done(function(datarespagination){
+
+         $("#list-prods").html("");
+         $("#list-prods").html(datarespagination);
+
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+         $.post("proc_navselowlpagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic },function(datanavpag){
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html(datanavpag);
+
+         });
+         
+    });
+
+      
+});
+
+$(".paginationsel").on("change","#selowlpagintation",function(eventpag){
+     eventpag.preventDefault();
+     var pagclic = $("#selowlpagintation").val();
+     var katepa= $(this).attr("data-pagination-clasi");
+     var sortpa= $("#sortingowl option:selected").index();
+     var showpa= $("#showingowl option:selected").index();
+     
+     var opcionsort,opcionshow = "";
+    switch (sortpa){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (showpa){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+    
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_resowlpagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic})
+      .done(function(datarespagination){
+
+         $("#list-prods").html("");
+         $("#list-prods").html(datarespagination);
+
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+         $.post("proc_navselowlpagination.php",{katepa: katepa,opcionsort: opcionsort,opcionshow: opcionshow,pagclic: pagclic },function(datanavpag){
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html(datanavpag);
+
+         });
+         
+    });
+
+      
+});
+
+  $("#sortingowl").change(function(){
+    var optsort= $("#sortingowl option:selected").index();
+    var optshow= $("#showingowl option:selected").index();
+    var katego= $("#sortingowl").attr("data-clasi-prod");
+    var wishli= $("#sortingowl").attr("data-wish-prod");
+    
+    var opcionsort,opcionshow="";
+
+    switch (optsort){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (optshow){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_sortingowlsearch.php",{sort: opcionsort, katego: katego, showp: opcionshow, wishli: wishli})
+    
+    .done(function(datasoting){
+         
+         $("#list-prods").html("");
+         $("#list-prods").html(datasoting);
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+    });
+
+
+  });
+
+  $("#showingowl").change(function(){
+    var pagclic = $("#selowlpagintation").val();
+    var optsort= $("#sortingowl option:selected").index();
+    var optshow= $("#showingowl option:selected").index();
+    var katego= $("#showingowl").attr("data-clasi-prod");
+    var wishli= $("#showingowl").attr("data-wish-prod");
+    
+    var opcionsort,opcionshow="";
+
+    switch (optsort){
+      case 0:
+       opcionsort="defecto";
+       break;
+      case 1:
+       opcionsort="nuevos";
+       break;
+      case 2:
+       opcionsort="menor";
+       break;
+      case 3:
+       opcionsort="mayor";              
+    }
+
+    switch (optshow){
+      case 0:
+       opcionshow="9";
+       break;
+      case 1:
+       opcionshow="9";
+       break;
+      case 2:
+       opcionshow="12";
+       break;
+      case 3:
+       opcionshow="18";              
+    }
+
+      $("#list-prods").html("");
+      $("#list-prods").html("<div class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+    $.post("proc_sortingowlsearch.php",{sort: opcionsort, katego: katego, showp: opcionshow, wishli: wishli})
+    
+    .done(function(datasoting){
+         
+         $("#list-prods").html("");
+         $("#list-prods").html(datasoting);
+         $("#list-prods .product_color_switch span").each(function() {
+            var get_color = $(this).attr('data-color');
+            $(this).css("background-color", get_color);
+          });
+
+         $.post("proc_navselowlpagination.php",{opcionsort: opcionsort, katepa: katego, opcionshow: opcionshow,pagclic: pagclic },function(datanavpag){
+
+          $(".paginationsel").html("");
+          $(".paginationsel").html(datanavpag);
+
+         });
+    });
+
+
+  });
+ //SHOP LIST PAG
+
+ //SUSCRIPCION
+ 
+ $("#suscrihome").click(function(eventsus){
+    eventsus.preventDefault();
+
+     var formData = new FormData($("#frmsuscri")[0]);
+     var nwmessage="";
+     var valmail = /(.+\@.+\..+)$/
+    if(!valmail.test($("#email-sus").val())){
+        nwmessage="<span class='alert alert-danger' rol='alert'>Alguno de los campos contiene errores...</span>";
+      $("#message-suscri").html("");
+      $("#message-suscri").html(nwmessage);
+    }else{
+      nwmessage = "<br><span class='alert alert-info' rol='alert'>Verificando Datos, por favor espere...</span><br>";
+      $("#message-suscri").html(nwmessage);
+
+     //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_suscripcion.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+         
+          
+        
+           
+          })         
+         .done(function(data){
+           
+            $("#message-suscri").html("").show();
+            $("#message-suscri").html("<span class='alert alert-success' rol='alert'>Datos procesados correctamente.</span>");
+            $("#message-suscri").fadeOut(5000,function(){
+               $(this).html("");
+               $(this).fadeIn(3000);
+             });        
+             $("#email-sus").val("");
+             $("#onload-popup").modal("hide");
+                  
+         })
+         .fail(function(){
+           nwmessage = "<br><span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span><br>";
+                   $("#message-suscri").html(nwmessage);
+          
+         });
+        
+      //Realizo Peticion Asincrona
+    }
+  });
+
+ $("#suscrifoo").click(function(eventsusfoo){
+    eventsusfoo.preventDefault();
+
+     var formData = new FormData($("#form-newmail")[0]);
+     var nwmessage="";
+     var valmail = /(.+\@.+\..+)$/
+    if(!valmail.test($("#emailsus").val())){
+        nwmessage="<span class='alert alert-danger' rol='alert'>Alguno de los campos contiene errores...</span>";
+      $("#message-suscrifoo").html("");
+      $("#message-suscrifoo").html(nwmessage);
+    }else{
+      nwmessage = "<br><span class='alert alert-info' rol='alert'>Verificando Datos, por favor espere...</span><br>";
+      $("#message-suscrifoo").html(nwmessage);
+
+     //Realizo Peticion Asincrona
+     $.ajax({
+         url: 'proc_suscrifooter.php',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false
+         
+          
+        
+           
+          })         
+         .done(function(data){
+           
+            $("#message-suscrifoo").html("").show();
+            $("#message-suscrifoo").html("<span class='alert alert-success' rol='alert'>Datos procesados correctamente.</span>");
+            $("#message-suscrifoo").fadeOut(5000,function(){
+               $(this).html("");
+               $(this).fadeIn(3000);
+             });        
+             $("#emailsus").val("");
+             
+             
+         })
+         .fail(function(){
+           nwmessage = "<br><span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span><br>";
+                   $("#message-suscrifoo").html(nwmessage);
+          
+         });
+        
+      //Realizo Peticion Asincrona
+    }
+  });
+ //SUSCRIPCION
+ 
+ //ENVIO FROMULARIO DE CONTACTO
+  $("#submitContact").click(function(econtacto){
+    econtacto.preventDefault();
+    var formDataC = new FormData($("#frm-coantact")[0]);
+    var messagec = "";
+
+    if(ValContactSu()){
+      messagec="<span class='alert alert-danger' rol='alert'>Alguno de los campos contiene errores...</span>";
+      $("#alert-msg").html(messagec);
+    }else{
+
+      $.ajax({
+        url: 'proc_contactsu.php',
+        type: 'POST',
+        data: formDataC,
+        cache: false,
+        contentType: false,
+        processData: false
+      })
+      .done(function(datacon){
+        $("#alert-msg").html("");
+         messagec="<span class='alert alert-success' rol='alert'>Datos procesados correctamente.</span>";
+        $("#alert-msg").html(messagec);
+         $("#alert-msg").fadeOut(5000,function(){
+            $(this).html("");
+            $(this).fadeIn(3000);
+         });
+
+        clearForm('frm-coantact');
+      })
+      .fail(function(){
+        messagec="<br><span class='alert alert-danger' rol='alert'>Ha ocurrido un error.</span><br>";
+        $("#alert-msg").html(messagec);
+      });
+
+    }
+  });
+ //ENVIO FROMULARIO DE CONTACTO
+  //CARGAR INFORMACION AL HACER SCROLL
+  $(window).on("scroll", function(){
+    if($("#listProducts").length > 0){
+
+        var iniValue = $("#listProducts").attr("data-listini");
+        var scrollLimit = parseInt($("#listProducts").prop("scrollHeight")) - parseInt($("#listProducts").offset().top);
+
+        
+        
+
+        if( ($(window).scrollTop() > scrollLimit) && parseInt(iniValue) <= 96){ 
+         
+         var newIniValue = parseInt(iniValue) + 12;
+               if(!$("#listProducts #loading").hasClass("lds-ellipsis")){
+                 $("#listProducts").append("<div id='loading' class='lds-ellipsis'><span></span><span></span><span></span></div>");
+
+                 $("#listProducts").attr("data-listini",""+newIniValue+"");
+
+                   $.post("proc_productlist.php",{ initQuery : iniValue })
+                      
+                   .done(function(dataPlus){
+                     
+                     $(".lds-ellipsis").remove();                 
+                     $("#listProducts").append(dataPlus);
+                   });
+               }
+               
+        }
+
+    }
+
+  });  
+  //CARGAR INFORMACION AL HACER SCROLL
+});
+
+function isImage(extension)
+{
+    switch(extension.toLowerCase()) 
+    {
+        case 'jpg': case 'gif': case 'png': case 'jpeg':
+            return true;
+        break;
+        default:
+            return false;
+        break;
+    }
+}
+function showMessage(message){
+    $(".messages").html("").show();
+    $(".messages").html(message);
+    
+    
+}
+function ValFormEditProfile(){
+
+  var vtext=/([a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vemail=/(.+\@.+\..+)$/
+  var vtextnum=/([0-9\s\+\-\#\_]|[a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vnum=/([0-9\s\_])$/
+  var error=false;
+
+  var profnam = $("#name_prof").val();
+  var proflnam = $("#lname_prof").val();
+  var profema = $("#email_prof").val();
+
+  
+
+  
+    if(!vtext.test(profnam)){
+     error=true;   
+    }
+    if(!vtext.test(proflnam)){
+     error=true;   
+    }    
+    if(!vemail.test(profema)){
+     error=true;   
+    } 
+
+    if(error==false){
+    return false; 
+    }else{
+    return true;    
+    }
+
+}
+function ValFormEditAddress(){
+
+  var vtext=/([a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vemail=/(.+\@.+\..+)$/
+  var vtextnum=/([0-9\s\+\-\#\_]|[a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vnum=/([0-9\s\_])$/
+  var error=false;
+
+  var addfnam = $("#fname_add").val();
+  var addlnam = $("#lname_add").val();
+  var adddira = $("#addrea_add").val();
+  var addciu = $("#ciu_add").val();
+  var addesta = $("#estad_add").val();
+  var addpcod = $("#pcod_add").val();
+  var addteln = $("#telnu_add").val();
+  var addemai = $("#email_add").val();
+  var addstat = $("#stat_add option:selected").index();
+
+  
+
+  
+    if(!vtext.test(addfnam)){
+     error=true;   
+    }
+    if(!vtext.test(addlnam)){
+     error=true;   
+    }    
+    if(!vtextnum.test(adddira)){
+     error=true;   
+    } 
+    if(!vtext.test(addciu)){
+     error=true;   
+    }
+    if(!vtext.test(addesta)){
+     error=true;   
+    }    
+    if(!vnum.test(addpcod)){
+     error=true;   
+    } 
+    if(!vnum.test(addteln)){
+     error=true;   
+    }
+    if(!vemail.test(addemai)){
+     error=true;   
+    }    
+    if(addstat==0){
+     error=true;   
+    } 
+
+    if(error==false){
+    return false; 
+    }else{
+    return true;    
+    }
+
+}
+function ValFormSavAddress(){
+
+  var vtext=/([a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vemail=/(.+\@.+\..+)$/
+  var vtextnum=/([0-9\s\+\-\#\_]|[a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vnum=/([0-9\s\_])$/
+  var error=false;
+
+  var addfnam = $("#fname_add").val();
+  var addlnam = $("#lname_add").val();
+  var adddira = $("#addrea_add").val();
+  var addciu = $("#ciu_add").val();
+  var addesta = $("#estad_add").val();
+  var addpcod = $("#pcod_add").val();
+  var addteln = $("#telnu_add").val();
+  var addemai = $("#email_add").val();
+  var addstat = $("#stat_add option:selected").index();
+
+  
+
+  
+    if(!vtext.test(addfnam)){
+     error=true;   
+    }
+    if(!vtext.test(addlnam)){
+     error=true;   
+    }    
+    if(!vtextnum.test(adddira)){
+     error=true;   
+    } 
+    if(!vtext.test(addciu)){
+     error=true;   
+    }
+    if(!vtext.test(addesta)){
+     error=true;   
+    }    
+    if(!vnum.test(addpcod)){
+     error=true;   
+    } 
+    if(!vnum.test(addteln)){
+     error=true;   
+    }
+    if(!vemail.test(addemai)){
+     error=true;   
+    }    
+    if(addstat==0){
+     error=true;   
+    } 
+
+    if(error==false){
+    return false; 
+    }else{
+    return true;    
+    }
+
+}
+function ValFormChangePassw(){
+
+  var vtext=/([a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vemail=/(.+\@.+\..+)$/
+  var vtextnum=/([0-9\s\+\-\#\_]|[a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vnum=/([0-9\s\_])$/
+  var error=false;
+
+  var actpass = $("#input-actclave").val();
+  var newpass = $("#input-nwclave").val();
+  var conpass = $("#input-conclave").val();
+  
+
+  
+
+  
+    if(!vtextnum.test(actpass)){
+     error=true;   
+    }
+    if(!vtextnum.test(newpass)){
+     error=true;   
+    }    
+    if(!vtextnum.test(conpass)){
+     error=true;   
+    }
+    if(newpass!=conpass){
+     error=true;   
+    }  
+    
+
+    if(error==false){
+    return false; 
+    }else{
+    return true;    
+    }
+
+}
+function ValFormLoginCheckout(){
+
+  var vtext=/([a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vemail=/(.+\@.+\..+)$/
+  var vtextnum=/([0-9\s\+\-\#\_]|[a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vnum=/([0-9\s\_])$/
+  var error=false;
+
+  var usernomlog = $("#txtlogemail").val();
+  var userpaslog = $("#txtlogpassword").val();
+  
+
+  
+    if(!vemail.test(usernomlog)){
+     error=true;   
+    }
+    if(!vtextnum.test(userpaslog)){
+     error=true;   
+    }    
+
+
+    if(error==false){
+    return false; 
+    }else{
+    return true;    
+    }
+
+}
+
+function ValFormLoginGral(){
+
+  var vtext=/([a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vemail=/(.+\@.+\..+)$/
+  var vtextnum=/([0-9\s\*\.\!\?\+\-\#\_]|[a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vnum=/([0-9\s\_])$/
+  var error=false;
+
+  var username = $("#txtemail").val();
+  var userpass = $("#txtpassword").val();
+  
+
+  
+    if(!vemail.test(username)){
+     error=true;   
+    }
+    if(!vtextnum.test(userpass)){
+     error=true;   
+    }    
+
+
+    if(error==false){
+    return false; 
+    }else{
+    return true;    
+    }
+
+}
+function ValSignUp(){
+
+  var vtext=/([a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vemail=/(.+\@.+\..+)$/
+  var vtextnum=/([0-9\s\+\-\#\_]|[a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vnum=/([0-9\s\_])$/
+  var error=false;
+
+  var sigupnom = $("#txtnomcli").val();
+  var sigupape = $("#txtapecli").val();
+  var sigupcor = $("#txtemacli").val();
+  var siguppass = $("#txtpasscli").val();
+  var siguppasscom = $("#txtpassclicom").val();  
+  var sigupterm = $("#txtterms:checkbox");
+  
+    
+    if(!vtext.test(sigupnom)){
+     error=true;   
+    }
+    if(!vtext.test(sigupape)){
+     error=true;   
+    }
+    if(!vemail.test(sigupcor)){
+     error=true;   
+    }
+    if(!vtextnum.test(siguppass)){
+     error=true;   
+    }
+    if(siguppass != siguppasscom){
+     error=true;   
+    }
+    if(!sigupterm.is(":checked")){
+     error=true;   
+    }    
+
+
+    if(error==false){
+    return false; 
+    }else{
+    return true;    
+    }
+
+}
+function ValDataCheckOut(){
+
+  var vtext=/([a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vemail=/(.+\@.+\..+)$/
+  var vtextnum=/([0-9\s\+\-\#\_]|[a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vnum=/([0-9\s\_])$/
+  var error=false;
+
+  var nomrem = $("#txtnomremi").val();
+  var aperem = $("#txtaperemi").val();
+  var dirrem = $("#txtdiraremi").val();
+  var ciurem = $("#txtciuremi").val();
+  var estrem = $("#txtestadremi").val();
+  var coprem = $("#txtcoposremi").val();
+  var telrem = $("#txtteleremi").val();
+  var emarem = $("#txtemaremi").val();
+  var tipago = $("#txttipopago option:selected").index();
+  var nwacco = $("#createaccount:checkbox");
+  var pasrem = $("#txtnwpassword").val();
+  //ShipData
+  var otrdes = $("#differentaddress:checkbox");
+  var nomdes = $("#txtnomdes").val();
+  var apedes = $("#txtapedes").val();
+  var dirdes = $("#txtdirades").val();
+  var ciudes = $("#txtciudes").val();
+  var estdes = $("#txtestades").val();
+  var copdes = $("#txtcoposdes").val();
+  var tippag = $("#txtoptpay").val();
+
+  var comped = $("#txtcomped").val();
+  var refban = $("#txtrefpag").val();
+  var imgban = $("#imgcompag").val();
+  var refbanb = $("#txtrefpagb").val();
+  var imgbanb = $("#imgcompagb").val();
+  //PayMethod
+  var opcunico = $(".payment_method input[name='txtformapago']:radio");
+  var numcheck =0;
+       $(".payment_method input[type='checkbox']").each(function(){
+          if($(this).is(":checked")){
+            numcheck = numcheck + 1;
+          }          
+        });
+         
+    $("#message-multipay").html(""); 
+
+    if(!vtext.test(nomrem)){
+     error=true;   
+    } 
+    if(!vtext.test(aperem)){
+     error=true;   
+    }
+    if(!vtextnum.test(dirrem)){
+     error=true;   
+    }
+    if(!vtext.test(ciurem)){
+     error=true;   
+    }
+    if(!vtext.test(estrem)){
+     error=true;   
+    }
+    if(!vnum.test(coprem)){
+     error=true;   
+    }
+    if(!vnum.test(telrem)){
+     error=true;   
+    }
+    if(!vemail.test(emarem)){
+     error=true;   
+    }
+    if(tipago==0){
+      error=true;
+    }
+    if(nwacco.is(":checked")){
+      if(!vtextnum.test(pasrem)){
+        error=true;
+      }   
+    }
+    if(otrdes.is(":checked")){
+        if(!vtext.test(nomdes)){
+          error=true;
+        }
+        if(!vtext.test(apedes)){
+          error=true;
+        } 
+        if(!vtextnum.test(dirdes)){
+          error=true;
+        } 
+        if(!vtext.test(ciudes)){
+          error=true;
+        } 
+        if(!vtext.test(estdes)){
+          error=true;
+        } 
+        if(!vnum.test(copdes)){
+          error=true;
+        }   
+    } 
+
+    if(!vtextnum.test(comped)){
+     error=true;   
+    }    
+    /*if(tippag=="directbank"){
+      error=true;
+    }*/
+    if(tipago==1){
+      if(!$(".payment_method input[name='txtformapago']:radio").is(":checked")){
+       error=true;
+      }
+    }
+    if(tipago==2){
+      if(numcheck==0 || numcheck==1 || numcheck > 2){
+       error=true;
+       $("#message-multipay").html("<br><span class='alert alert-danger' rol='alert'>Solo puede seleccionar Dos Forma de Pago.</span><br>");
+      }
+    }
+    if(tipago==1 || tipago==2){
+      if(!vnum.test(refban)){
+        error=true;
+      }
+      if(imgban==""){
+        error=true;
+      }
+    }
+    if(tipago==2){
+      if(!vnum.test(refbanb)){
+        error=true;
+      }
+      if(imgbanb==""){
+        error=true;
+      }
+    }
+
+    if(error==false){
+    return false; 
+    }else{
+    return true;    
+    }
+
+
+}
+function ValContactSu(){
+
+  var vtext=/([a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vemail=/(.+\@.+\..+)$/
+  var vtextnum=/([0-9\s\+\-\#\_]|[a-z]|[A-Z]|á|é|í|ó|ú|ñ|ü|\.|_)$/
+  var vnum=/([0-9\s\_])$/
+  var error=false;
+
+  
+  var conmon = $("#inputnomcon").val();
+  var concor = $("#inputcorcon").val();
+  var contel = $("#inputtelcon").val();
+  var conasu = $("#inputasucon").val();  
+  var conmen = $("#inputmencon").val();
+  
+    
+  
+    if(!vtext.test(conmon)){
+     error=true;   
+    }
+    if(!vemail.test(concor)){
+     error=true;   
+    }
+    if(!vnum.test(contel)){
+     error=true;   
+    }
+    if(!vtextnum.test(conasu)){
+     error=true;   
+    }
+    if(!vtextnum.test(conmen)){
+     error=true;   
+    }    
+
+
+    if(error==false){
+    return false; 
+    }else{
+    return true;    
+    }
+
+}
+function CheckFormaPago(valorforpag){
+  var formapag=valorforpag;
+  $("#txtoptpay").val("");
+  $("#txtoptpay").val(formapag);
+}
+function clearForm(formNamer){
+  var fnameclear = formNamer;
+  $('#'+fnameclear+'')[0].reset();
+}
